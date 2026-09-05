@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\WisataModel;
 use App\Http\Resources\WisataResource as Data;
-use Illuminate\Support\Facades\Validator;
+use App\Models\WisataModel;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class WisataController extends Controller
@@ -17,34 +18,28 @@ class WisataController extends Controller
 
     public function create()
     {
-        //
+        // Not used by the API-only CRUD flow.
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_wisata' => ['required'],
-            'deskripsi' => ['required'],
+        $validated = $request->validate([
+            'nama_wisata' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['required', 'string'],
             'foto' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = Str::random() . '.' . $file->getClientOriginalExtension();
-            $path = $file->move('images', $filename);
+        $path = $this->storeImage($request->file('foto'));
 
-            WisataModel::create([
-                'nama_wisata' => $request->nama_wisata,
-                'deskripsi' => $request->deskripsi,
-                'foto' => $path,
-            ]);
+        WisataModel::create([
+            'nama_wisata' => $validated['nama_wisata'],
+            'deskripsi' => $validated['deskripsi'],
+            'foto' => $path,
+        ]);
 
-            return response()->json([
-                'success' => 'Berhasil Menambah Data!'
-            ]);
-        }
-
-        return response()->json('Gagal Menambah Data!');
+        return response()->json([
+            'success' => 'Berhasil Menambah Data!',
+        ], 201);
     }
 
     public function show($id)
@@ -53,8 +48,8 @@ class WisataController extends Controller
 
         if (!$findData) {
             return response()->json([
-                'errors' => 'Data Wisata Tidak Ditemukan!'
-            ]);
+                'errors' => 'Data Wisata Tidak Ditemukan!',
+            ], 404);
         }
 
         return new Data($findData);
@@ -62,58 +57,41 @@ class WisataController extends Controller
 
     public function edit($id)
     {
-        $findData = WisataModel::find($id);
-
-        if (!$findData) {
-            return response()->json([
-                'errors' => 'Data Wisata Tidak Ditemukan!'
-            ]);
-        }
-
-        return new Data($findData);
+        return $this->show($id);
     }
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'nama_wisata' => 'required',
-            'deskripsi' => 'required',
-            'foto' => 'nullable',
+        $validated = $request->validate([
+            'nama_wisata' => ['required', 'string', 'max:255'],
+            'deskripsi' => ['required', 'string'],
+            'foto' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => 'Gagal Merubah Data!',
-            ]);
-        }
 
         $findData = WisataModel::find($id);
 
         if (!$findData) {
             return response()->json([
-                'errors' => 'Data Wisata Tidak Ditemukan!'
-            ]);
+                'errors' => 'Data Wisata Tidak Ditemukan!',
+            ], 404);
         }
 
-        $findData->nama_wisata = $request->nama_wisata;
-        $findData->deskripsi = $request->deskripsi;
+        $findData->nama_wisata = $validated['nama_wisata'];
+        $findData->deskripsi = $validated['deskripsi'];
 
         if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            $filename = Str::random() . '.' . $file->getClientOriginalExtension();
-            $path = $file->move('images', $filename);
+            $oldPath = $findData->foto;
+            $findData->foto = $this->storeImage($request->file('foto'));
 
-            unlink($findData->foto); // Delete the old path image before update new path image.
-
-            $findData->foto = $path;
-        } else {
-            $findData->foto = $findData->foto;
+            if ($oldPath) {
+                Storage::disk('public')->delete($oldPath);
+            }
         }
 
         $findData->save();
 
         return response()->json([
-            'success' => 'Berhasil Merubah Data!'
+            'success' => 'Berhasil Merubah Data!',
         ]);
     }
 
@@ -123,15 +101,25 @@ class WisataController extends Controller
 
         if (!$findData) {
             return response()->json([
-                'errors' => 'Data Wisata Tidak Ditemukan!'
-            ]);
+                'errors' => 'Data Wisata Tidak Ditemukan!',
+            ], 404);
         }
 
-        unlink($findData->foto);
+        if ($findData->foto) {
+            Storage::disk('public')->delete($findData->foto);
+        }
+
         $findData->delete();
 
         return response()->json([
-            'success' => 'Berhasil Menghapus Data!'
+            'success' => 'Berhasil Menghapus Data!',
         ]);
+    }
+
+    private function storeImage(UploadedFile $file): string
+    {
+        $filename = Str::random(40) . '.' . $file->extension();
+
+        return $file->storeAs('images', $filename, 'public');
     }
 }
