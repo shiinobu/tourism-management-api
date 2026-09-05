@@ -1,64 +1,227 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# CRUD React REST API
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple full-stack CRUD application for managing tourism destinations (`wisata`). The project demonstrates a Laravel REST API consumed by a React frontend, with image upload, validation, and MySQL persistence.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Tourism destination CRUD
+- REST API with Laravel 8
+- React 17 frontend
+- MySQL database
+- Image upload and replacement
+- Request validation for tourism data and images
+- Laravel API Resources for consistent responses
+- Laravel Sanctum available for authenticated user endpoints
+- Toast/alert feedback in the frontend
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Backend
 
-## Learning Laravel
+- PHP 7.3+
+- Laravel 8
+- Laravel Eloquent
+- Laravel Sanctum
+- MySQL
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Frontend
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- React 17
+- React Router DOM
+- Axios
+- Bootstrap 5
+- React Toastify
+- SweetAlert2
 
-## Laravel Sponsors
+## Architecture
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```text
+React Frontend
+     |
+     | HTTP / JSON / Multipart Form Data
+     v
+Laravel REST API
+     |
+     v
+Eloquent ORM
+     |
+     v
+MySQL
+```
 
-### Premium Partners
+Uploaded images are stored on Laravel's public filesystem and referenced by their generated server-side filename.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Project Structure
 
-## Contributing
+```text
+app/
+├── Http/
+│   ├── Controllers/
+│   │   └── WisataController.php
+│   └── Resources/
+│       └── WisataResource.php
+├── Models/
+│   └── WisataModel.php
+routes/
+└── api.php
+resources/
+└── js/
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Requirements
 
-## Code of Conduct
+- PHP 7.3 or newer
+- Composer
+- Node.js 16+
+- npm
+- MySQL 5.7+ / 8.x
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Installation
 
-## Security Vulnerabilities
+### 1. Clone the repository
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+git clone https://github.com/shiinobu/CRUD-React-REST-API.git
+cd CRUD-React-REST-API
+```
+
+### 2. Install PHP dependencies
+
+```bash
+composer install
+```
+
+### 3. Configure environment
+
+Copy the example environment file:
+
+```bash
+cp .env.example .env
+```
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Generate the Laravel application key:
+
+```bash
+php artisan key:generate
+```
+
+Update the database settings in `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=crudreact
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 4. Prepare the database
+
+Create the configured MySQL database, then run migrations:
+
+```bash
+php artisan migrate
+```
+
+### 5. Install frontend dependencies
+
+```bash
+npm install
+```
+
+Build/watch frontend assets during development:
+
+```bash
+npm run dev
+```
+
+### 6. Prepare public storage
+
+```bash
+php artisan storage:link
+```
+
+### 7. Start Laravel
+
+In another terminal:
+
+```bash
+php artisan serve
+```
+
+The API will normally be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/wisatas` | List tourism destinations |
+| POST | `/api/wisatas` | Create a tourism destination |
+| GET | `/api/wisatas/{id}/detail` | Get destination detail |
+| GET | `/api/wisatas/{id}/edit` | Get destination data for editing |
+| PUT | `/api/wisatas/{id}` | Update a destination |
+| DELETE | `/api/wisatas/{id}` | Delete a destination |
+| GET | `/api/user` | Get authenticated user through Sanctum |
+
+### Create / Update Fields
+
+```text
+nama_wisata  string, required, max 255 characters
+deskripsi    string, required
+foto         image, jpeg/png/jpg/gif, max 2 MB
+```
+
+`foto` is required when creating a destination and optional when updating one.
+
+## Authentication
+
+The project includes Laravel Sanctum configuration for authenticated API access. The tourism CRUD routes are currently public, while the default `/api/user` route requires Sanctum authentication.
+
+## Development
+
+Run frontend development assets:
+
+```bash
+npm run dev
+```
+
+Run Laravel locally:
+
+```bash
+php artisan serve
+```
+
+Run the Laravel test suite:
+
+```bash
+php artisan test
+```
+
+## Security Notes
+
+- Do not commit `.env` files or production credentials.
+- Use `.env.example` as the configuration template.
+- Uploaded images are validated by MIME/type and file size.
+- Uploaded filenames are generated server-side instead of trusting the original filename.
+- Existing images are removed through Laravel's filesystem abstraction when replaced or deleted.
+
+See [`SECURITY.md`](SECURITY.md) for the security policy.
+
+## Status
+
+This is a portfolio/learning project demonstrating a Laravel + React REST API with CRUD and file-upload workflows.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE).
