@@ -1,6 +1,6 @@
-# CRUD React REST API
+# Tourism Management API
 
-A simple full-stack CRUD application for managing tourism destinations (`wisata`). The project demonstrates a Laravel REST API consumed by a React frontend, with image upload, validation, and MySQL persistence.
+A full-stack tourism management application for managing tourism destinations (`wisata`). The project demonstrates a Laravel REST API consumed by a React frontend, with image upload, validation, and MySQL persistence.
 
 ## Features
 
@@ -81,8 +81,8 @@ resources/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/shiinobu/CRUD-React-REST-API.git
-cd CRUD-React-REST-API
+git clone https://github.com/shiinobu/tourism-management-api.git
+cd tourism-management-api
 ```
 
 ### 2. Install PHP dependencies
@@ -211,4 +211,4 @@ See [`SECURITY.md`](SECURITY.md) for the security policy.
 
 ## Status
 
-This is a portfolio/learning project demonstrating a Laravel + React REST API with CRUD and file-upload workflows.
+This is a portfolio/supporting project demonstrating a Laravel + React REST API with CRUD and file-upload workflows.
