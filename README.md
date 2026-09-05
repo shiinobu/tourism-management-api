@@ -111,16 +111,7 @@ Generate the Laravel application key:
 php artisan key:generate
 ```
 
-Update the database settings in `.env`:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=crudreact
-DB_USERNAME=root
-DB_PASSWORD=
-```
+Update the database settings in `.env`.
 
 ### 4. Prepare the database
 
@@ -221,7 +212,3 @@ See [`SECURITY.md`](SECURITY.md) for the security policy.
 ## Status
 
 This is a portfolio/learning project demonstrating a Laravel + React REST API with CRUD and file-upload workflows.
-
-## License
-
-This project is licensed under the MIT License. See [`LICENSE`](LICENSE).
